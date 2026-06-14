@@ -1,3 +1,4 @@
+import os
 import bpy
 from pydub import AudioSegment
 from pydub import silence
@@ -27,26 +28,24 @@ class SEQUENCER_OT_remove_silence(bpy.types.Operator):
 
         cut_audio = AudioSegment.empty()
         cut_path = props.export_filepath if not props.same_filepath_as_source else filepath
+        base = os.path.splitext(cut_path)[0]
+        output_path = base + "_cut"
 
         for cut in cuts:
             cut_audio += cut
 
-        cut_audio.export(cut_path + ".mp3", format="mp3")
+        cut_audio.export(output_path + ".mp3", format="mp3")
 
-        scene = context.scene
-        fps = scene.render.fps
         channel = seq.channel
         current_frame = seq.frame_start
         
-        # Remove a strip original
         bpy.ops.sequencer.delete()
 
-        bpy.context.scene.sequence_editor.sequences_all
         seq_editor = context.scene.sequence_editor
 
-        new_strip = seq_editor.sequences.new_sound(
+        seq_editor.sequences.new_sound(
             name="Cut",
-            filepath=cut_path + ".mp3",
+            filepath=output_path + ".mp3",
             channel=channel,
             frame_start=int(current_frame)
         )
