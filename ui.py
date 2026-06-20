@@ -9,9 +9,7 @@ class SilenceRemoverPanel(bpy.types.Panel):
 
     def draw_header(self, context):
         layout = self.layout
-        layout.label(text="", icon='SOUND')
-        layout.label(text="Remove silences from selected audio strips")
-        layout.separator()
+        layout.label(text="Silence Remover", icon='SOUND')
 
     def draw_silence_remover_mode(self, layout, props):
         options = ["Audio","Video"]
@@ -53,7 +51,7 @@ class SilenceRemoverPanel(bpy.types.Panel):
         props = context.scene.properties
         layout = self.layout
 
-        self.draw_header(layout)
+        self.draw_header(context)
 
         self.draw_silence_remover_mode(layout, props)
 
